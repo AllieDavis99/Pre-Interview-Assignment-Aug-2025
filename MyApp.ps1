@@ -62,17 +62,40 @@ function Sort-Alpha{
     depending on the user input
     #>
 
-    
+    #Adds each item that can NOT be converted into a double to the result array
+    foreach ($item in $textArray){
+        if ($null -eq ($item -as [double])){
+            $script:resultArray += $item
+        }
+    }
+
+    #Then sort
+    if ($sortOrder -eq "ascending"){
+        $script:resultArray = $resultArray | Sort-Object 
+    }
+    else{
+        $script:resultArray = $resultArray | Sort-Object -Descending
+    }
+}
+
+function Sort-Both{
+    <#
+    Outputs all values from $textArray in ascending or descending order
+    depending on the user input
+    #>
 
 }
 
 
 #Call the appropriate sorting function
-if ($valueType = "numeric"){
+if ($valueType -eq 'numeric'){
     Sort-Numeric
 }
-elseif ($valueType = "alpha"){
+elseif ($valueType -eq 'alpha'){
     Sort-Alpha
+}
+else{
+    Sort-Both
 }
 
 #Print sorted array to the terminal
