@@ -51,7 +51,7 @@ function Sort-Numeric {
 
     #Adds each item that can be converted into a double to the result array 
     foreach ($item in $textArray){
-        if ($item -as [double]){
+        if (($item -as [double]) -ne $null){
             $script:resultArray += [double]$item
         }
     }
