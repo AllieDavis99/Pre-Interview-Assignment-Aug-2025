@@ -84,6 +84,23 @@ function Sort-Both{
     depending on the user input
     #>
 
+    #Adds all items to result array, converting numeric values if needed
+    foreach($item in $textArray){
+        if($item -as [double]){
+            $script:resultArray += [double]$item
+        }
+        else{
+            $script:resultArray += $item
+        }
+    }
+
+    #Then sort
+    if ($sortOrder -eq "ascending"){
+        $script:resultArray = $resultArray | Sort-Object 
+    }
+    else{
+        $script:resultArray = $resultArray | Sort-Object -Descending
+    }
 }
 
 
