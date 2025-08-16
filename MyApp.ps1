@@ -12,22 +12,31 @@ Outputs:
     resultArray: str
 #>
 
+#values from terminal input
+$filePath = $args[0]
+$valueType = $args[1]
+$sortOrder = $args[2]
+
 #Valid user inputs
 $validTypes = @('alpha','numeric','both')
 $validOrders = @('ascending','descending')
 
-#Get user input and check that input is valid
-do {
-    $filePath = Read-Host -Prompt "Enter path to text file"
-} until (Test-Path -Path $filePath)
 
-do{
-    $valueType = Read-Host -Prompt "Enter type of value to sort ('alpha', 'numeric', or 'both)"
-} until ($validTypes -contains $valueType)
+#Validate user input
+if(-not(Test-Path -Path $filePath)){
+    Write-Host "Invalid file path!"
+    exit
+}
 
-do{
-    $sortOrder = Read-Host -Prompt "Enter sort order ('ascending' or 'descending')"
-} until ($validOrders -contains $sortOrder)
+if (-not($validTypes -contains $valueType)){
+    Write-Host "Invalid value type!"
+    exit
+}
+
+if (-not($validOrders -contains $sortOrder)){
+    Write-Host "Invalid sort order!"
+    exit
+}
 
 #Start actually parsing text
 $rawText = Get-Content -Path $filePath
