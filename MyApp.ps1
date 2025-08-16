@@ -9,7 +9,7 @@ Inputs:
     sortOrder: str
 
 Outputs: 
-    resultList: str
+    resultArray: str
 #>
 
 #Valid user inputs
@@ -17,7 +17,9 @@ $validTypes = @('alpha','numeric','both')
 $validOrders = @('ascending','descending')
 
 #Get user input and check that input is valid
-$filePath = Read-Host -Prompt "Enter path to text file"
+do {
+    $filePath = Read-Host -Prompt "Enter path to text file"
+} until (Test-Path -Path $filePath)
 
 do{
     $valueType = Read-Host -Prompt "Enter type of value to sort ('alpha', 'numeric', or 'both)"
@@ -26,3 +28,52 @@ do{
 do{
     $sortOrder = Read-Host -Prompt "Enter sort order ('ascending' or 'descending')"
 } until ($validOrders -contains $sortOrder)
+
+#Start actually parsing text
+$rawText = Get-Content -Path $filePath
+$textArray = $rawText -split ",\s*"
+$resultArray = @()
+
+function Sort-Numeric {
+    <#
+    Outputs numeric values from $textArray in ascending or descending order
+    depending on the user input
+    #>
+
+    #Adds each item that can be converted into a double to the result array 
+    foreach ($item in $textArray){
+        if ($item -as [double]){
+            $script:resultArray += [double]$item
+        }
+    }
+
+    #Then sort
+    if ($sortOrder -eq "ascending"){
+        $script:resultArray = $resultArray | Sort-Object 
+    }
+    else{
+        $script:resultArray = $resultArray | Sort-Object -Descending
+    }
+}
+
+function Sort-Alpha{
+    <#
+    Outputs non-numeric values from $textArray in ascending or descending order
+    depending on the user input
+    #>
+
+    
+
+}
+
+
+#Call the appropriate sorting function
+if ($valueType = "numeric"){
+    Sort-Numeric
+}
+elseif ($valueType = "alpha"){
+    Sort-Alpha
+}
+
+#Print sorted array to the terminal
+Write-Host $resultArray
